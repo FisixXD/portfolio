@@ -10,6 +10,7 @@
         /* --- CONFIGURAÇÃO DA FONTE --- */
         @font-face {
             font-family: 'FisixFont';
+            /* Certifique-se que o nome do arquivo no GitHub é EXATAMENTE esse */
             src: url('Helvetica .Black Oblique.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
@@ -26,11 +27,13 @@
             position: relative;
         }
 
+        /* --- CANVAS ASCII (Fundo) --- */
         #ascii-canvas {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 0; pointer-events: none;
         }
 
+        /* --- EFEITO VHS/NTSC --- */
         .vhs-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 9999;
@@ -40,6 +43,7 @@
             background-size: 100% 2px, 4px 100%;
         }
 
+        /* --- TIPOGRAFIA --- */
         h1, h2, .fisix-font {
             font-family: 'FisixFont', sans-serif;
             text-transform: uppercase;
@@ -54,6 +58,7 @@
             text-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
         }
 
+        /* --- CONTAINER PRINCIPAL --- */
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; min-height: 100vh;
@@ -73,6 +78,7 @@
             border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 20px;
         }
 
+        /* --- BOTÕES DE NAVEGAÇÃO --- */
         .nav-bar {
             display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
         }
@@ -87,6 +93,7 @@
         .nav-btn:hover { background: #000; color: #fff; transform: skew(-5deg); }
         .nav-btn.active { background: #000; color: #fff; box-shadow: 5px 5px 0px #999; }
 
+        /* --- CONTEÚDO DAS ABAS --- */
         .tab-content { display: none; animation: fadeIn 0.5s; }
         .tab-content.active { display: block; }
 
@@ -95,17 +102,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- ESTILOS DESIGN --- */
         .design-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
         }
-        .design-item { border: 2px solid #000; transition: 0.2s; }
+        .design-item { border: 2px solid #000; transition: 0.2s; background: #000; }
         .design-item:hover { transform: scale(1.02); box-shadow: 8px 8px 0 #000; }
         
         .design-item img {
             width: 100%; height: auto; display: block;
-            /* REMOVI O FILTRO PRETO E BRANCO AQUI */
+            /* FILTRO DE COR REMOVIDO AQUI - Agora elas ficam coloridas */
         }
 
+        /* --- ESTILOS VÍDEO --- */
         .video-container { margin-bottom: 40px; border: 4px solid #000; background: #000; }
         .video-title { background: #000; color: #fff; padding: 10px; font-family: 'FisixFont', sans-serif; font-size: 1.5rem; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
@@ -145,7 +154,7 @@
             <section>
                 <h2>// QUEM SOU EU</h2>
                 <img src="weelzin.png" style="width: 150px; border: 2px solid #000; float: right; margin-left: 20px;">
-                <p>Bem-vindo ao sistema. Sou o Fisix! sou editor de vídeo e designer.</p>
+                <p>Bem-vindo ao sistema. Sou o Fisix! Sou editor de vídeo e designer.</p>
                 <p>Neste portfólio você pode ver meus trabalhos mais recentes.</p>
                 <div style="clear: both;"></div>
             </section>
@@ -164,7 +173,7 @@
         <div id="designs" class="tab-content">
             <h2>// ARQUIVO DE IMAGENS</h2>
             <p style="margin-bottom: 20px;">Galeria de artes visuais.</p>
-            
+
             <div class="design-grid">
                 
                 <div class="design-item">
@@ -176,11 +185,11 @@
                 </div>
 
                 <div class="design-item">
-                    <img src="megasaldão.png" alt="Design 3">
+                    <img src="megasaldao.png" alt="Design 3">
                 </div>
 
                 <div class="design-item">
-                    <img src="garantajá.png" alt="Design 4">
+                    <img src="garantaja.png" alt="Design 4">
                 </div>
 
             </div>
@@ -211,7 +220,7 @@
             </div>
 
         </div>
-
+                
         <footer>
             <p>FISIX! © 2025</p>
             <p>ALL RIGHTS RESERVED.</p>
@@ -219,19 +228,28 @@
     </div>
 
     <script>
+        // SCRIPT DE TROCA DE ABAS
         function openTab(tabName) {
+            // 1. Esconde todo o conteúdo
             var contents = document.getElementsByClassName("tab-content");
             for (var i = 0; i < contents.length; i++) {
                 contents[i].classList.remove("active");
             }
+
+            // 2. Tira o destaque de todos os botões
             var buttons = document.getElementsByClassName("nav-btn");
             for (var i = 0; i < buttons.length; i++) {
                 buttons[i].classList.remove("active");
             }
+
+            // 3. Mostra o conteúdo escolhido e destaca o botão clicado
             document.getElementById(tabName).classList.add("active");
-            event.currentTarget.classList.add("active");
+            
+            var clickedBtn = event.currentTarget;
+            clickedBtn.classList.add("active");
         }
 
+        // SCRIPT DO FUNDO ASCII
         const canvas = document.getElementById('ascii-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -261,6 +279,7 @@
             const rightX = width * 0.9;
 
             if(width > 800) {
+                // CUBO ESQUERDA
                 const size = 120; const step = 30;
                 for (let x = -size; x <= size; x += step) {
                     for (let y = -size; y <= size; y += step) {
@@ -277,6 +296,7 @@
                         }
                     }
                 }
+                // LOSANGO DIREITA
                 const size2 = 140;
                 const points = [{x:0, y:size2, z:0}, {x:0, y:-size2, z:0}, {x:size2, y:0, z:0}, {x:-size2, y:0, z:0}, {x:0, y:0, z:size2}, {x:0, y:0, z:-size2}];
                 for(let i=0; i< points.length; i++) {
