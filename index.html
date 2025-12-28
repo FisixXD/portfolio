@@ -10,7 +10,6 @@
         /* --- CONFIGURAÇÃO DA FONTE --- */
         @font-face {
             font-family: 'FisixFont';
-            /* O arquivo da fonte deve estar na mesma pasta */
             src: url('Helvetica .Black Oblique.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
@@ -23,21 +22,17 @@
             background-color: #f2f2f2;
             color: #050505;
             font-family: 'Space Mono', monospace;
-            overflow-x: hidden; /* Evita rolagem lateral indesejada */
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* --- CANVAS ASCII (Fundo) --- */
         #ascii-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 0; pointer-events: none;
         }
 
-        /* --- EFEITO VHS/NTSC --- */
         .vhs-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 9999;
             background: 
                 linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
@@ -45,7 +40,6 @@
             background-size: 100% 2px, 4px 100%;
         }
 
-        /* --- TIPOGRAFIA --- */
         h1, h2, .fisix-font {
             font-family: 'FisixFont', sans-serif;
             text-transform: uppercase;
@@ -60,132 +54,65 @@
             text-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
         }
 
-        /* --- CONTAINER PRINCIPAL --- */
         .container {
-            position: relative;
-            z-index: 10;
-            max-width: 900px;
-            margin: 0 auto;
-            min-height: 100vh;
+            position: relative; z-index: 10;
+            max-width: 900px; margin: 0 auto; min-height: 100vh;
             background: #fff;
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
+            border-left: 1px solid #000; border-right: 1px solid #000;
             padding: 40px;
             box-shadow: 0 0 50px rgba(0,0,0,0.05);
         }
 
         header {
-            border-bottom: 5px solid #000;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            border-bottom: 5px solid #000; padding-bottom: 20px; margin-bottom: 30px;
         }
 
         .meta-data {
             font-size: 0.75rem; color: #555;
             display: flex; justify-content: space-between;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px; margin-bottom: 20px;
+            border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 20px;
         }
 
-        /* --- MENU DE NAVEGAÇÃO (BOTÕES) --- */
         .nav-bar {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
         }
 
         .nav-btn {
-            background: transparent;
-            border: 2px solid #000;
-            font-family: 'FisixFont', sans-serif;
-            font-size: 1.5rem;
-            padding: 10px 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-            flex: 1; /* Botões ocupam espaço igual */
+            background: transparent; border: 2px solid #000;
+            font-family: 'FisixFont', sans-serif; font-size: 1.5rem;
+            padding: 10px 20px; cursor: pointer; text-transform: uppercase;
+            transition: all 0.2s; flex: 1;
         }
 
-        .nav-btn:hover {
-            background: #000;
-            color: #fff;
-            transform: skew(-5deg);
-        }
+        .nav-btn:hover { background: #000; color: #fff; transform: skew(-5deg); }
+        .nav-btn.active { background: #000; color: #fff; box-shadow: 5px 5px 0px #999; }
 
-        .nav-btn.active {
-            background: #000;
-            color: #fff;
-            box-shadow: 5px 5px 0px #999;
-        }
-
-        /* --- CONTEÚDO DAS ABAS --- */
-        .tab-content {
-            display: none; /* Esconde tudo por padrão */
-            animation: fadeIn 0.5s;
-        }
-        
-        .tab-content.active {
-            display: block; /* Mostra só o ativo */
-        }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- ESTILOS ESPECÍFICOS PARA DESIGN --- */
         .design-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
         }
-        .design-item {
-            border: 2px solid #000;
-            transition: 0.2s;
-        }
-        .design-item:hover {
-            transform: scale(1.02);
-            box-shadow: 8px 8px 0 #000;
-        }
+        .design-item { border: 2px solid #000; transition: 0.2s; }
+        .design-item:hover { transform: scale(1.02); box-shadow: 8px 8px 0 #000; }
+        
         .design-item img {
-            width: 100%; height: auto;
-            display: block;
-            filter: grayscale(100%) contrast(110%);
+            width: 100%; height: auto; display: block;
+            /* REMOVI O FILTRO PRETO E BRANCO AQUI */
         }
 
-        /* --- ESTILOS ESPECÍFICOS PARA VÍDEO --- */
-        .video-container {
-            margin-bottom: 40px;
-            border: 4px solid #000;
-            background: #000;
-        }
-        .video-title {
-            background: #000;
-            color: #fff;
-            padding: 10px;
-            font-family: 'FisixFont', sans-serif;
-            font-size: 1.5rem;
-        }
-        /* Responsividade do embed do Youtube */
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0; overflow: hidden;
-        }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
+        .video-container { margin-bottom: 40px; border: 4px solid #000; background: #000; }
+        .video-title { background: #000; color: #fff; padding: 10px; font-family: 'FisixFont', sans-serif; font-size: 1.5rem; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* --- RODAPÉ --- */
-        footer {
-            text-align: center; border-top: 1px solid #000;
-            padding-top: 30px; margin-top: 50px;
-            opacity: 0.6;
-        }
+        footer { text-align: center; border-top: 1px solid #000; padding-top: 30px; margin-top: 50px; opacity: 0.6; }
 
-        /* Responsividade */
         @media (max-width: 800px) {
             h1 { font-size: 4rem; }
             .nav-bar { flex-direction: column; }
@@ -217,8 +144,10 @@
         <div id="perfil" class="tab-content active">
             <section>
                 <h2>// QUEM SOU EU</h2>
+                <img src="weelzin.png" style="width: 150px; border: 2px solid #000; float: right; margin-left: 20px;">
                 <p>Bem-vindo ao sistema. Sou o Fisix! sou editor de vídeo e designer.</p>
                 <p>Neste portfólio você pode ver meus trabalhos mais recentes.</p>
+                <div style="clear: both;"></div>
             </section>
             
             <section>
@@ -232,52 +161,57 @@
             </section>
         </div>
 
-        <div class="design-grid">
+        <div id="designs" class="tab-content">
+            <h2>// ARQUIVO DE IMAGENS</h2>
+            <p style="margin-bottom: 20px;">Galeria de artes visuais.</p>
+            
+            <div class="design-grid">
                 
                 <div class="design-item">
-                    <img src="QUALQUER_KEY.png" alt="Descrição da imagem">
+                    <img src="QUALQUER_KEY.png" alt="Design 1">
                 </div>
 
                 <div class="design-item">
-                    <img src="csgtvaa.png" alt="Flyer Show">
+                    <img src="csgtvaa.png" alt="Design 2">
                 </div>
 
                 <div class="design-item">
-                    <img src="megasaldao.png" alt="Capa Album">
+                    <img src="megasaldão.png" alt="Design 3">
                 </div>
 
                 <div class="design-item">
-                    <img src="garantaja.png" alt="Capa Album">
+                    <img src="garantajá.png" alt="Design 4">
                 </div>
 
-                </div>
+            </div>
+        </div>
 
         <div id="videos" class="tab-content">
             <h2>// VIDEO EDITS</h2>
             <p style="margin-bottom: 20px;">Edições hospedadas em servidor privado.</p>
 
             <div class="video-container">
-                <div class="video-title"> </div>
+                <div class="video-title">EDIT 01</div>
                 <div class="video-wrapper">
                     <iframe src="https://drive.google.com/file/d/1dwsZIHtCY2Bv8C0ld1zFckKPRKvy0C-H/preview" width="640" height="480" allow="autoplay"></iframe>
                 </div>
             </div>
             <div class="video-container">
-                <div class="video-title"> </div>
+                <div class="video-title">EDIT 02</div>
                 <div class="video-wrapper">
                     <iframe src="https://drive.google.com/file/d/1Cp-6tjxP6dKIQdHy-cdNg0uefth66dyX/preview" width="640" height="480" allow="autoplay"></iframe>
                 </div>
             </div>
 
             <div class="video-container">
-                <div class="video-title"> </div>
+                <div class="video-title">EDIT 03</div>
                 <div class="video-wrapper">
                     <iframe src="https://drive.google.com/file/d/11eufmarB1TyKO0o82gNVolp-SRhae62_/preview" width="640" height="480" allow="autoplay"></iframe>
                 </div>
             </div>
 
         </div>
-                
+
         <footer>
             <p>FISIX! © 2025</p>
             <p>ALL RIGHTS RESERVED.</p>
@@ -285,32 +219,19 @@
     </div>
 
     <script>
-        // SCRIPT DE TROCA DE ABAS
         function openTab(tabName) {
-            // 1. Esconde todo o conteúdo
             var contents = document.getElementsByClassName("tab-content");
             for (var i = 0; i < contents.length; i++) {
                 contents[i].classList.remove("active");
             }
-
-            // 2. Tira o destaque de todos os botões
             var buttons = document.getElementsByClassName("nav-btn");
             for (var i = 0; i < buttons.length; i++) {
                 buttons[i].classList.remove("active");
             }
-
-            // 3. Mostra o conteúdo escolhido e destaca o botão clicado
             document.getElementById(tabName).classList.add("active");
-            
-            // Acha o botão que foi clicado (baseado no texto ou ordem) - Truque simples:
-            // Vamos iterar os botões e ver qual chama a função com esse nome
-            // Mas mais fácil: o HTML já passa 'this' se quisermos, mas aqui fiz genérico.
-            // Vamos deixar o botão "ativo" visualmente:
-            var clickedBtn = event.currentTarget;
-            clickedBtn.classList.add("active");
+            event.currentTarget.classList.add("active");
         }
 
-        // SCRIPT DO FUNDO ASCII (O mesmo de antes)
         const canvas = document.getElementById('ascii-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -340,7 +261,6 @@
             const rightX = width * 0.9;
 
             if(width > 800) {
-                // CUBO ESQUERDA
                 const size = 120; const step = 30;
                 for (let x = -size; x <= size; x += step) {
                     for (let y = -size; y <= size; y += step) {
@@ -357,7 +277,6 @@
                         }
                     }
                 }
-                // LOSANGO DIREITA
                 const size2 = 140;
                 const points = [{x:0, y:size2, z:0}, {x:0, y:-size2, z:0}, {x:size2, y:0, z:0}, {x:-size2, y:0, z:0}, {x:0, y:0, z:size2}, {x:0, y:0, z:-size2}];
                 for(let i=0; i< points.length; i++) {
@@ -376,4 +295,3 @@
     </script>
 </body>
 </html>
-
