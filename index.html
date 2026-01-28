@@ -1,403 +1,387 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FISIX! // PORTFOLIO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- CONFIGURAÇÃO DA FONTE --- */
-        @font-face {
-            font-family: 'FisixFont';
-            /* Certifique-se que o nome do arquivo no GitHub é EXATAMENTE esse */
-            /* DICA: evite espaços no nome do arquivo (ex: FisixFont.woff2) */
-            src: url('FisixFont.woff2') format('woff2'),
-                 url('FisixFont.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FISIX! // PORTFOLIO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-        /* --- RESET --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  <style>
+    /* --- CONFIGURAÇÃO DA FONTE --- */
+    @font-face {
+      font-family: 'FisixFont';
+      src: url('HelveticaBlackOblique.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
 
-        :root{
-            --bg: #f2f2f2;
-            --ink: #050505;
-            --paper: #ffffff;
-            --border: #000000;
-            --muted: #555555;
-        }
+    /* --- RESET --- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root{
+      --bg: #f2f2f2;
+      --ink: #050505;
+      --paper: #ffffff;
+      --border: #000000;
+      --muted: #555555;
+    }
 
-        body {
-            background-color: var(--bg);
-            color: var(--ink);
-            font-family: 'Space Mono', monospace;
-            overflow-x: hidden;
-            position: relative;
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-        /* --- CANVAS ASCII (Fundo) --- */
-        #ascii-canvas {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0; pointer-events: none;
-        }
+    /* --- CANVAS ASCII (Fundo) --- */
+    #ascii-canvas {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0; pointer-events: none;
+    }
 
-        /* --- EFEITO VHS/NTSC --- */
-        .vhs-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999;
-            background: 
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
-                linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
-            background-size: 100% 2px, 4px 100%;
-        }
+    /* --- EFEITO VHS/NTSC --- */
+    .vhs-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9999;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
+        linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
+      background-size: 100% 2px, 4px 100%;
+    }
 
-        /* --- TIPOGRAFIA --- */
-        h1, h2, .fisix-font {
-            font-family: 'FisixFont', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            font-style: italic;
-        }
+    /* --- TIPOGRAFIA --- */
+    h1, h2, .fisix-font {
+      font-family: 'FisixFont', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      font-style: italic;
+    }
 
-        h1 {
-            font-size: 6rem;
-            line-height: 0.85;
-            margin-bottom: 10px;
-            text-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
-        }
+    h1 {
+      font-size: 6rem;
+      line-height: 0.85;
+      margin-bottom: 10px;
+      text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    }
 
-        /* --- CONTAINER PRINCIPAL --- */
-        .container {
-            position: relative; z-index: 10;
-            max-width: 900px; margin: 0 auto; min-height: 100vh;
-            background: var(--paper);
-            border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-            padding: 40px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.05);
-        }
+    /* --- CONTAINER PRINCIPAL --- */
+    .container {
+      position: relative; z-index: 10;
+      max-width: 900px; margin: 0 auto; min-height: 100vh;
+      background: var(--paper);
+      border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+      padding: 40px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.05);
+    }
 
-        header {
-            border-bottom: 5px solid #000; padding-bottom: 20px; margin-bottom: 30px;
-        }
+    header {
+      border-bottom: 5px solid #000; padding-bottom: 20px; margin-bottom: 30px;
+    }
 
-        .meta-data {
-            font-size: 0.75rem; color: var(--muted);
-            display: flex; justify-content: space-between;
-            border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 20px;
-        }
+    .meta-data {
+      font-size: 0.75rem; color: var(--muted);
+      display: flex; justify-content: space-between;
+      border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 20px;
+    }
 
-        /* --- BOTÕES DE NAVEGAÇÃO --- */
-        .nav-bar {
-            display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
-        }
+    /* --- BOTÕES DE NAVEGAÇÃO --- */
+    .nav-bar {
+      display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
+    }
 
-        .nav-btn {
-            background: transparent; border: 2px solid #000;
-            font-family: 'FisixFont', sans-serif; font-size: 1.5rem;
-            padding: 10px 20px; cursor: pointer; text-transform: uppercase;
-            transition: all 0.2s; flex: 1;
-        }
+    .nav-btn {
+      background: transparent; border: 2px solid #000;
+      font-family: 'FisixFont', sans-serif; font-size: 1.5rem;
+      padding: 10px 20px; cursor: pointer; text-transform: uppercase;
+      transition: all 0.2s; flex: 1;
+    }
 
-        .nav-btn:hover { background: #000; color: #fff; transform: skew(-5deg); }
-        .nav-btn.active { background: #000; color: #fff; box-shadow: 5px 5px 0px #999; }
+    .nav-btn:hover { background: #000; color: #fff; transform: skew(-5deg); }
+    .nav-btn.active { background: #000; color: #fff; box-shadow: 5px 5px 0px #999; }
 
-        /* --- CONTEÚDO DAS ABAS --- */
-        .tab-content { display: none; animation: fadeIn 0.5s; }
-        .tab-content.active { display: block; }
+    /* --- CONTEÚDO DAS ABAS --- */
+    .tab-content { display: none; animation: fadeIn 0.5s; }
+    .tab-content.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        /* --- ESTILOS DESIGN --- */
-        .design-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
-        }
-        .design-item { border: 2px solid #000; transition: 0.2s; background: #000; }
-        .design-item:hover { transform: scale(1.02); box-shadow: 8px 8px 0 #000; }
-        
-        .design-item img {
-            width: 100%; height: auto; display: block;
-            /* FILTRO DE COR REMOVIDO AQUI - Agora elas ficam coloridas */
-        }
+    /* --- ESTILOS DESIGN --- */
+    .design-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+    }
+    .design-item { border: 2px solid #000; transition: 0.2s; background: #000; }
+    .design-item:hover { transform: scale(1.02); box-shadow: 8px 8px 0 #000; }
 
-        /* --- ESTILOS VÍDEO --- */
-        .video-container { margin-bottom: 40px; border: 4px solid #000; background: #000; }
-        .video-title { background: #000; color: #fff; padding: 10px; font-family: 'FisixFont', sans-serif; font-size: 1.5rem; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .design-item img {
+      width: 100%; height: auto; display: block;
+    }
 
+    /* --- ESTILOS VÍDEO --- */
+    .video-container { margin-bottom: 40px; border: 4px solid #000; background: #000; }
+    .video-title { background: #000; color: #fff; padding: 10px; font-family: 'FisixFont', sans-serif; font-size: 1.5rem; }
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* --- CAIXA "EDITAR AQUI" --- */
-        .quick-edit{ display:none; margin-top: 18px; border: 2px dashed var(--border); padding: 14px; background: rgba(0,0,0,0.02); }
-        body.show-edit .quick-edit{ display:block; }
-        .quick-edit-title{ font-size: 1.2rem; margin-bottom: 10px; }
-        .quick-edit-body{ font-size: 0.85rem; line-height: 1.4; color: var(--muted); }
-        .qe-mono{ font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.05); padding: 8px; border: 1px solid rgba(0,0,0,0.2); white-space: pre-wrap; }
+    /* --- CAIXA "EDITAR AQUI" --- */
+    .quick-edit{ display:none; margin-top: 18px; border: 2px dashed var(--border); padding: 14px; background: rgba(0,0,0,0.02); }
+    body.show-edit .quick-edit{ display:block; }
+    .quick-edit-title{ font-size: 1.2rem; margin-bottom: 10px; }
+    .quick-edit-body{ font-size: 0.85rem; line-height: 1.4; color: var(--muted); }
+    .qe-mono{ font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.05); padding: 8px; border: 1px solid rgba(0,0,0,0.2); white-space: pre-wrap; }
 
-        footer { text-align: center; border-top: 1px solid #000; padding-top: 30px; margin-top: 50px; opacity: 0.6; }
+    footer { text-align: center; border-top: 1px solid #000; padding-top: 30px; margin-top: 50px; opacity: 0.6; }
 
-        @media (max-width: 800px) {
-            h1 { font-size: 4rem; }
-            .nav-bar { flex-direction: column; }
-            #ascii-canvas { opacity: 0.2; }
-        }
-    </style>
+    @media (max-width: 800px) {
+      h1 { font-size: 4rem; }
+      .nav-bar { flex-direction: column; }
+      #ascii-canvas { opacity: 0.2; }
+    }
+  </style>
 </head>
 <body>
 
-    <canvas id="ascii-canvas"></canvas>
-    <div class="vhs-overlay"></div>
+  <canvas id="ascii-canvas"></canvas>
+  <div class="vhs-overlay"></div>
 
-    <div class="container">
-        <header>
-            <div class="meta-data">
-                <span>REC ●</span> <span>SYS.FISIX.OS</span> <span>[NTSC]</span>
-            </div>
-            
-            <h1 id="siteName">FISIX!</h1>
-            <p>// <span id="siteRole">VIDEO EDITOR / DESIGNER</span> </p>
+  <div class="container">
+    <header>
+      <div class="meta-data">
+        <span>REC ●</span> <span>SYS.FISIX.OS</span> <span>[NTSC]</span>
+      </div>
 
-            <!-- =========================================================
-                 EDITAR AQUI (SEM COMPLICAÇÃO)
-                 - Troque os textos e os nomes dos arquivos abaixo.
-                 - DICA: coloque este HTML + as imagens no MESMO folder.
-                 ========================================================= -->
-            <div class="quick-edit">
-                <div class="quick-edit-title fisix-font">CONFIG.RÁPIDA</div>
-                <div class="quick-edit-body">
-                    <div><b>Seu nome:</b> <span id="qe-name">FISIX!</span></div>
-                    <div><b>Seu cargo:</b> <span id="qe-role">VIDEO EDITOR / DESIGNER</span></div>
-<div style="margin-top:10px;"><b>Imagens da galeria (arquivos, separados por vírgula):</b></div>
-                    <div class="qe-mono" id="qe-designs">https://media.discordapp.net/attachments/1329144357365747817/1448421706707370177/FIVEM_10.png?ex=69772f95&is=6975de15&hm=d37a3a656590f3514b9b5ddf4bf9ce571957a8c07acc5a1f574ce7c364ca0aaf&=&format=webp&quality=lossless,
-https://media.discordapp.net/attachments/1329144357365747817/1442899445992788139/premiere.png?ex=697787d3&is=69763653&hm=c886ef4fa93bd4e045aadc5035f8c8cc0325b361b61e4c8865b1b49d65f22619&=&format=webp&quality=lossless,
-https://media.discordapp.net/attachments/1360787207018778806/1413565727612604459/well.png?ex=69779a2c&is=697648ac&hm=a8c8644b0326f57cdaaabfb1f6d13a1e97233565ca54588ce28388909b235e8a&=&format=webp&quality=lossless&width=680&height=850,
-https://cdn.discordapp.com/attachments/1360787207018778806/1384585414026985564/image.png?ex=6977a427&is=697652a7&hm=5c1acaa8baf43f5512eb8554e2c72389df40f54c278b032108d2501309ade903,
-https://media.discordapp.net/attachments/1329144357365747817/1382038536135377117/image.png?ex=69779ab0&is=69764930&hm=95d07a12f23ba4f1f8344fe853943bfd3f7b35607b47edd644a2c11fcdd3d22f&=&format=webp&quality=lossless,
-https://media.discordapp.net/attachments/1329144357365747817/1384194782523560077/image.png?ex=697789d9&is=69763859&hm=e60ee94d35e21e8f64e56ab1fda533d343da959a88e41b13266ded4a9e293c76&=&format=webp&quality=lossless&width=850&height=850</div>
-                    <div style="margin-top:10px;"><b>Vídeos (links /preview do Google Drive, separados por linha):</b></div>
-                    <div class="qe-mono" id="qe-videos">Vídeo 1 | https://drive.google.com/file/d/1dwsZIHtCY2Bv8C0ld1zFckKPRKvy0C-H/preview
+      <h1 id="siteName">FISIX!</h1>
+      <p>// <span id="siteRole">VIDEO EDITOR / DESIGNER</span> </p>
+
+      <!-- =========================================================
+           EDITAR AQUI (SEM COMPLICAÇÃO)
+           - A caixa não aparece pro público.
+           - Pra ver: abra com ?edit=1 ou #edit
+           ========================================================= -->
+      <div class="quick-edit">
+        <div class="quick-edit-title fisix-font">CONFIG.RÁPIDA</div>
+        <div class="quick-edit-body">
+          <div><b>Seu nome:</b> <span id="qe-name">FISIX!</span></div>
+          <div><b>Seu cargo:</b> <span id="qe-role">VIDEO EDITOR / DESIGNER</span></div>
+
+          <div style="margin-top:10px;"><b>Imagens da galeria (arquivos, separados por vírgula):</b></div>
+          <div class="qe-mono" id="qe-designs">1.png,
+2.png,
+3.png,
+4.png,
+5.png,
+6.png</div>
+
+          <div style="margin-top:10px;"><b>Vídeos (links /preview do Google Drive, separados por linha):</b></div>
+          <div class="qe-mono" id="qe-videos">Vídeo 1 | https://drive.google.com/file/d/1dwsZIHtCY2Bv8C0ld1zFckKPRKvy0C-H/preview
 Vídeo 2 | https://drive.google.com/file/d/1Cp-6tjxP6dKIQdHy-cdNg0uefth66dyX/preview
 Vídeo 3 | https://drive.google.com/file/d/11eufmarB1TyKO0o82gNVolp-SRhae62_/preview</div>
-                </div>
-            </div>
-
-
-            <nav class="nav-bar">
-                <button class="nav-btn active" onclick="openTab(event,'perfil')">PERFIL</button>
-                <button class="nav-btn" onclick="openTab(event,'designs')">DESIGNS</button>
-                <button class="nav-btn" onclick="openTab(event,'videos')">VIDEOS</button>
-            </nav>
-        </header>
-
-        <div id="perfil" class="tab-content active">
-            <section>
-                <h2>// QUEM SOU EU</h2>
-<p>Bem-vindo ao sistema. Sou o Fisix! Sou editor de vídeo e designer.</p>
-                <p>Neste portfólio você pode ver meus trabalhos mais recentes.</p>
-                <div style="clear: both;"></div>
-            </section>
-            
-            <section>
-                <h2>// SKILLS</h2>
-                <ul style="list-style-type: square; padding-left: 20px; line-height: 1.8;">
-                    <li>Design Gráfico (Krita / Paint.NET)</li>
-                    <li>Edição de Vídeo (Premiere / CapCut / Alight Motion)</li>
-                    <li>Estética Retro/Analog</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>// CONTATO</h2>
-                <p>Me chama aqui: <b>@fisixyt_</b> • Email: <b>fisixxd@gmail.com</b></p>
-            </section>
         </div>
+      </div>
 
-        <div id="designs" class="tab-content">
-            <h2>// ARQUIVO DE IMAGENS</h2>
-            <p style="margin-bottom: 20px;">Galeria de artes visuais.</p>
+      <nav class="nav-bar">
+        <button class="nav-btn active" onclick="openTab(event,'perfil')">PERFIL</button>
+        <button class="nav-btn" onclick="openTab(event,'designs')">DESIGNS</button>
+        <button class="nav-btn" onclick="openTab(event,'videos')">VIDEOS</button>
+      </nav>
+    </header>
 
-            <div class="design-grid" id="designGrid">
-                
-                <div class="design-item">
-                    <img src="QUALQUER_KEY.png" alt="Design 1">
-                </div>
+    <div id="perfil" class="tab-content active">
+      <section>
+        <h2>// QUEM SOU EU</h2>
+        <p>Bem-vindo ao sistema. Sou o Fisix! Sou editor de vídeo e designer.</p>
+        <p>Neste portfólio você pode ver meus trabalhos mais recentes.</p>
+        <div style="clear: both;"></div>
+      </section>
 
-                <div class="design-item">
-                    <img src="csgtvaa.png" alt="Design 2">
-                </div>
+      <section>
+        <h2>// SKILLS</h2>
+        <ul style="list-style-type: square; padding-left: 20px; line-height: 1.8;">
+          <li>Design Gráfico (Krita / Paint.NET)</li>
+          <li>Edição de Vídeo (Premiere / CapCut / Alight Motion)</li>
+          <li>Estética Retro/Analog</li>
+        </ul>
+      </section>
 
-                <div class="design-item">
-                    <img src="megasaldao.png" alt="Design 3">
-                </div>
-
-                <div class="design-item">
-                    <img src="garantaja.png" alt="Design 4">
-                </div>
-
-            </div>
-        </div>
-
-        <div id="videos" class="tab-content">
-            <h2>// VIDEOS</h2>
-
-            <div id="videoList">
-                <!-- Os vídeos são carregados automaticamente pelo script (veja a caixa CONFIG.RÁPIDA acima). -->
-            </div>
-
-        </div>
-                
-        <footer>
-            <p>FISIX! © 2025</p>
-            <p>ALL RIGHTS RESERVED.</p>
-        </footer>
+      <section>
+        <h2>// CONTATO</h2>
+        <p>Me chama aqui: <b>@fisixyt_</b> • Email: <b>fisixxd@gmail.com</b></p>
+      </section>
     </div>
 
-    <script>
-        // SCRIPT DE TROCA DE ABAS
-        function openTab(evt, tabName) {
-            // 1. Esconde todo o conteúdo
-            var contents = document.getElementsByClassName("tab-content");
-            for (var i = 0; i < contents.length; i++) {
-                contents[i].classList.remove("active");
-            }
+    <div id="designs" class="tab-content">
+      <h2>// ARQUIVO DE IMAGENS</h2>
+      <p style="margin-bottom: 20px;">Galeria de artes visuais.</p>
 
-            // 2. Tira o destaque de todos os botões
-            var buttons = document.getElementsByClassName("nav-btn");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove("active");
-            }
+      <div class="design-grid" id="designGrid">
 
-            // 3. Mostra o conteúdo escolhido e destaca o botão clicado
-            document.getElementById(tabName).classList.add("active");
-            
-            var clickedBtn = evt.currentTarget;
-            clickedBtn.classList.add("active");
+        <!-- Placeholders (ATUALIZADOS) - o script abaixo vai substituir por 1.png..6.png -->
+        <div class="design-item"><img src="1.png" alt="Design 1"></div>
+        <div class="design-item"><img src="2.png" alt="Design 2"></div>
+        <div class="design-item"><img src="3.png" alt="Design 3"></div>
+        <div class="design-item"><img src="4.png" alt="Design 4"></div>
+
+      </div>
+    </div>
+
+    <div id="videos" class="tab-content">
+      <h2>// VIDEOS</h2>
+
+      <div id="videoList">
+        <!-- Os vídeos são carregados automaticamente pelo script (veja a caixa CONFIG.RÁPIDA acima). -->
+      </div>
+    </div>
+
+    <footer>
+      <p>FISIX! © 2025</p>
+      <p>ALL RIGHTS RESERVED.</p>
+    </footer>
+  </div>
+
+  <script>
+    // SCRIPT DE TROCA DE ABAS
+    function openTab(evt, tabName) {
+      // 1. Esconde todo o conteúdo
+      var contents = document.getElementsByClassName("tab-content");
+      for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.remove("active");
+      }
+
+      // 2. Tira o destaque de todos os botões
+      var buttons = document.getElementsByClassName("nav-btn");
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+      }
+
+      // 3. Mostra o conteúdo escolhido e destaca o botão clicado
+      document.getElementById(tabName).classList.add("active");
+
+      var clickedBtn = evt.currentTarget;
+      clickedBtn.classList.add("active");
+    }
+
+    // SCRIPT DO FUNDO ASCII
+    const canvas = document.getElementById('ascii-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let angle = 0;
+    function project(x, y, z, centerX, centerY) {
+      const scale = 400 / (400 + z);
+      return { x: centerX + x * scale, y: centerY + y * scale, scale: scale };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#111";
+      ctx.font = "12px monospace";
+      angle += 0.01;
+
+      const leftX = width * 0.1;
+      const centerY = height / 2;
+      const rightX = width * 0.9;
+
+      if(width > 800) {
+        // CUBO ESQUERDA
+        const size = 120; const step = 30;
+        for (let x = -size; x <= size; x += step) {
+          for (let y = -size; y <= size; y += step) {
+            for (let z = -size; z <= size; z += step) {
+              let x1 = x * Math.cos(angle) - z * Math.sin(angle);
+              let z1 = x * Math.sin(angle) + z * Math.cos(angle);
+              let y1 = y * Math.cos(angle * 0.5) - z1 * Math.sin(angle * 0.5);
+              let z2 = y * Math.sin(angle * 0.5) + z1 * Math.cos(angle * 0.5);
+              if (Math.abs(x) >= size || Math.abs(y) >= size || Math.abs(z) >= size) {
+                const p = project(x1, y1, z2, leftX, centerY);
+                ctx.globalAlpha = 0.3;
+                ctx.fillText("+", p.x, p.y);
+              }
+            }
+          }
         }
-
-        // SCRIPT DO FUNDO ASCII
-        const canvas = document.getElementById('ascii-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
+        // LOSANGO DIREITA
+        const size2 = 140;
+        const points = [{x:0, y:size2, z:0}, {x:0, y:-size2, z:0}, {x:size2, y:0, z:0}, {x:-size2, y:0, z:0}, {x:0, y:0, z:size2}, {x:0, y:0, z:-size2}];
+        for(let i=0; i< points.length; i++) {
+          let pt = points[i];
+          let x1 = pt.x * Math.cos(-angle) - pt.z * Math.sin(-angle);
+          let z1 = pt.x * Math.sin(-angle) + pt.z * Math.cos(-angle);
+          let y1 = pt.y * Math.cos(-angle) - z1 * Math.sin(-angle);
+          let z2 = pt.y * Math.sin(-angle) + z1 * Math.cos(-angle);
+          const p = project(x1, y1, z2, rightX, centerY);
+          ctx.font = "20px Arial"; ctx.globalAlpha = 0.6; ctx.fillText("♦", p.x, p.y);
         }
-        window.addEventListener('resize', resize);
-        resize();
+      }
 
-        let angle = 0;
-        function project(x, y, z, centerX, centerY) {
-            const scale = 400 / (400 + z); 
-            return { x: centerX + x * scale, y: centerY + y * scale, scale: scale };
-        }
+      requestAnimationFrame(draw);
+    }
+    draw();
 
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = "#111";
-            ctx.font = "12px monospace";
-            angle += 0.01;
+    // Mostrar a CONFIG.RÁPIDA só quando você quiser:
+    // - Abra o site com ?edit=1  (ex: index.html?edit=1)
+    // - Ou com #edit (ex: index.html#edit)
+    (function maybeShowEditBox(){
+      const qs = new URLSearchParams(window.location.search);
+      if (window.location.hash === '#edit' || qs.get('edit') === '1') {
+        document.body.classList.add('show-edit');
+      }
+    })();
 
-            const leftX = width * 0.1; 
-            const centerY = height / 2;
-            const rightX = width * 0.9;
+    // ===== CONFIG RÁPIDA -> CONTEÚDO AUTOMÁTICO =====
+    (function applyQuickConfig(){
+      const name = document.getElementById('qe-name')?.textContent?.trim();
+      const role = document.getElementById('qe-role')?.textContent?.trim();
+      const designs = document.getElementById('qe-designs')?.textContent?.trim();
+      const videos = document.getElementById('qe-videos')?.textContent?.trim();
 
-            if(width > 800) {
-                // CUBO ESQUERDA
-                const size = 120; const step = 30;
-                for (let x = -size; x <= size; x += step) {
-                    for (let y = -size; y <= size; y += step) {
-                        for (let z = -size; z <= size; z += step) {
-                            let x1 = x * Math.cos(angle) - z * Math.sin(angle);
-                            let z1 = x * Math.sin(angle) + z * Math.cos(angle);
-                            let y1 = y * Math.cos(angle * 0.5) - z1 * Math.sin(angle * 0.5);
-                            let z2 = y * Math.sin(angle * 0.5) + z1 * Math.cos(angle * 0.5);
-                            if (Math.abs(x) >= size || Math.abs(y) >= size || Math.abs(z) >= size) {
-                                const p = project(x1, y1, z2, leftX, centerY);
-                                ctx.globalAlpha = 0.3;
-                                ctx.fillText("+", p.x, p.y);
-                            }
-                        }
-                    }
-                }
-                // LOSANGO DIREITA
-                const size2 = 140;
-                const points = [{x:0, y:size2, z:0}, {x:0, y:-size2, z:0}, {x:size2, y:0, z:0}, {x:-size2, y:0, z:0}, {x:0, y:0, z:size2}, {x:0, y:0, z:-size2}];
-                for(let i=0; i< points.length; i++) {
-                     let pt = points[i];
-                     let x1 = pt.x * Math.cos(-angle) - pt.z * Math.sin(-angle);
-                     let z1 = pt.x * Math.sin(-angle) + pt.z * Math.cos(-angle);
-                     let y1 = pt.y * Math.cos(-angle) - z1 * Math.sin(-angle);
-                     let z2 = pt.y * Math.sin(-angle) + z1 * Math.cos(-angle);
-                     const p = project(x1, y1, z2, rightX, centerY);
-                     ctx.font = "20px Arial"; ctx.globalAlpha = 0.6; ctx.fillText("♦", p.x, p.y);
-                }
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
+      if(name) document.getElementById('siteName').textContent = name;
+      if(role) document.getElementById('siteRole').textContent = role;
 
+      // Galeria
+      const grid = document.getElementById('designGrid');
+      if(grid && designs){
+        grid.innerHTML = '';
+        designs.split(',').map(s => s.trim()).filter(Boolean).forEach((src, idx) => {
+          const item = document.createElement('div');
+          item.className = 'design-item';
+          item.innerHTML = `<img src="${src}" alt="Design ${idx+1}" loading="lazy">`;
+          grid.appendChild(item);
+        });
+      }
 
-        // ===== CONFIG RÁPIDA -> CONTEÚDO AUTOMÁTICO =====
-        
-        // Mostrar a CONFIG.RÁPIDA só quando você quiser:
-        // - Abra o site com ?edit=1  (ex: portfolio.html?edit=1)
-        // - Ou com #edit (ex: portfolio.html#edit)
-        (function maybeShowEditBox(){
-            const qs = new URLSearchParams(window.location.search);
-            if (window.location.hash === '#edit' || qs.get('edit') === '1') {
-                document.body.classList.add('show-edit');
-            }
-        })();
+      // Vídeos (uma linha por vídeo: TITULO | URL)
+      const list = document.getElementById('videoList');
+      if(list && videos){
+        list.innerHTML = '';
+        videos.split('\n').map(s => s.trim()).filter(Boolean).forEach((line, idx) => {
+          const parts = line.split('|');
+          const title = (parts[0] || `EDIT ${String(idx+1).padStart(2,'0')}`).trim();
+          const url = (parts[1] || '').trim();
 
-        (function applyQuickConfig(){
-            const name = document.getElementById('qe-name')?.textContent?.trim();
-            const role = document.getElementById('qe-role')?.textContent?.trim();
-            const designs = document.getElementById('qe-designs')?.textContent?.trim();
-            const videos = document.getElementById('qe-videos')?.textContent?.trim();
-
-            if(name) document.getElementById('siteName').textContent = name;
-            if(role) document.getElementById('siteRole').textContent = role;
-            // Galeria
-            const grid = document.getElementById('designGrid');
-            if(grid && designs){
-                grid.innerHTML = '';
-                designs.split(',').map(s => s.trim()).filter(Boolean).forEach((src, idx) => {
-                    const item = document.createElement('div');
-                    item.className = 'design-item';
-                    item.innerHTML = `<img src="${src}" alt="Design ${idx+1}" loading="lazy">`;
-                    grid.appendChild(item);
-                });
-            }
-
-            // Vídeos (uma linha por vídeo: TITULO | URL)
-            const list = document.getElementById('videoList');
-            if(list && videos){
-                list.innerHTML = '';
-                videos.split('\n').map(s => s.trim()).filter(Boolean).forEach((line, idx) => {
-                    const parts = line.split('|');
-                    const title = (parts[0] || `EDIT ${String(idx+1).padStart(2,'0')}`).trim();
-                    const url = (parts[1] || '').trim();
-
-                    const wrap = document.createElement('div');
-                    wrap.className = 'video-container';
-                    wrap.innerHTML = `
-                        <div class="video-title">${title}</div>
-                        <div class="video-wrapper">
-                            <iframe src="${url}" allow="autoplay" loading="lazy"></iframe>
-                        </div>
-                    `;
-                    list.appendChild(wrap);
-                });
-            }
-        })();
-
-    </script>
+          const wrap = document.createElement('div');
+          wrap.className = 'video-container';
+          wrap.innerHTML = `
+            <div class="video-title">${title}</div>
+            <div class="video-wrapper">
+              <iframe src="${url}" allow="autoplay" loading="lazy"></iframe>
+            </div>
+          `;
+          list.appendChild(wrap);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
