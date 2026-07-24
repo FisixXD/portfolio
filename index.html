@@ -1,387 +1,71 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FISIX! // PORTFOLIO</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a0a08">
+  <meta name="description" content="Portfólio de Fisix — edição de vídeo e design gráfico com textura, ritmo e identidade.">
+  <title>FISIX! — Video Editor & Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* --- CONFIGURAÇÃO DA FONTE --- */
-    @font-face {
-      font-family: 'FisixFont';
-      src: url('HelveticaBlackOblique.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    /* --- RESET --- */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root{
-      --bg: #f2f2f2;
-      --ink: #050505;
-      --paper: #ffffff;
-      --border: #000000;
-      --muted: #555555;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--ink);
-      font-family: 'Space Mono', monospace;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* --- CANVAS ASCII (Fundo) --- */
-    #ascii-canvas {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 0; pointer-events: none;
-    }
-
-    /* --- EFEITO VHS/NTSC --- */
-    .vhs-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 9999;
-      background:
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
-        linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
-      background-size: 100% 2px, 4px 100%;
-    }
-
-    /* --- TIPOGRAFIA --- */
-    h1, h2, .fisix-font {
-      font-family: 'FisixFont', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: -2px;
-      font-style: italic;
-    }
-
-    h1 {
-      font-size: 6rem;
-      line-height: 0.85;
-      margin-bottom: 10px;
-      text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
-    }
-
-    /* --- CONTAINER PRINCIPAL --- */
-    .container {
-      position: relative; z-index: 10;
-      max-width: 900px; margin: 0 auto; min-height: 100vh;
-      background: var(--paper);
-      border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-      padding: 40px;
-      box-shadow: 0 0 50px rgba(0,0,0,0.05);
-    }
-
-    header {
-      border-bottom: 5px solid #000; padding-bottom: 20px; margin-bottom: 30px;
-    }
-
-    .meta-data {
-      font-size: 0.75rem; color: var(--muted);
-      display: flex; justify-content: space-between;
-      border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 20px;
-    }
-
-    /* --- BOTÕES DE NAVEGAÇÃO --- */
-    .nav-bar {
-      display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
-    }
-
-    .nav-btn {
-      background: transparent; border: 2px solid #000;
-      font-family: 'FisixFont', sans-serif; font-size: 1.5rem;
-      padding: 10px 20px; cursor: pointer; text-transform: uppercase;
-      transition: all 0.2s; flex: 1;
-    }
-
-    .nav-btn:hover { background: #000; color: #fff; transform: skew(-5deg); }
-    .nav-btn.active { background: #000; color: #fff; box-shadow: 5px 5px 0px #999; }
-
-    /* --- CONTEÚDO DAS ABAS --- */
-    .tab-content { display: none; animation: fadeIn 0.5s; }
-    .tab-content.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- ESTILOS DESIGN --- */
-    .design-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
-    }
-    .design-item { border: 2px solid #000; transition: 0.2s; background: #000; }
-    .design-item:hover { transform: scale(1.02); box-shadow: 8px 8px 0 #000; }
-
-    .design-item img {
-      width: 100%; height: auto; display: block;
-    }
-
-    /* --- ESTILOS VÍDEO --- */
-    .video-container { margin-bottom: 40px; border: 4px solid #000; background: #000; }
-    .video-title { background: #000; color: #fff; padding: 10px; font-family: 'FisixFont', sans-serif; font-size: 1.5rem; }
-    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-    /* --- CAIXA "EDITAR AQUI" --- */
-    .quick-edit{ display:none; margin-top: 18px; border: 2px dashed var(--border); padding: 14px; background: rgba(0,0,0,0.02); }
-    body.show-edit .quick-edit{ display:block; }
-    .quick-edit-title{ font-size: 1.2rem; margin-bottom: 10px; }
-    .quick-edit-body{ font-size: 0.85rem; line-height: 1.4; color: var(--muted); }
-    .qe-mono{ font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.05); padding: 8px; border: 1px solid rgba(0,0,0,0.2); white-space: pre-wrap; }
-
-    footer { text-align: center; border-top: 1px solid #000; padding-top: 30px; margin-top: 50px; opacity: 0.6; }
-
-    @media (max-width: 800px) {
-      h1 { font-size: 4rem; }
-      .nav-bar { flex-direction: column; }
-      #ascii-canvas { opacity: 0.2; }
-    }
+    @font-face{font-family:Fisix;src:url('HelveticaBlackOblique.otf') format('opentype');font-display:swap}
+    :root{--ink:#0a0a08;--paper:#e8e4d8;--green:#19ff69;--orange:#ff4e1f;--line:rgba(232,228,216,.3);--mono:'IBM Plex Mono',monospace;--display:Fisix,Impact,sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--mono);overflow-x:hidden;cursor:crosshair}a{color:inherit}button{font:inherit}img{max-width:100%}
+    ::selection{background:var(--green);color:var(--ink)}
+    .noise,.scanlines,.tracking{position:fixed;inset:0;pointer-events:none}.noise{z-index:90;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E")}.scanlines{z-index:91;opacity:.13;background:repeating-linear-gradient(0deg,transparent 0 3px,#000 4px)}.tracking{z-index:89;opacity:0;background:linear-gradient(transparent 40%,rgba(255,255,255,.12) 41%,transparent 44%);animation:tracking 9s infinite}
+    @keyframes tracking{0%,88%,100%{opacity:0;transform:translateY(-60%)}89%{opacity:1}94%{opacity:.4;transform:translateY(60%)}}
+    .topline{height:34px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 22px;font-size:10px;letter-spacing:.12em;position:relative;z-index:10;white-space:nowrap;overflow:hidden}.rec{color:var(--orange)}.rec:before{content:'';display:inline-block;width:7px;height:7px;background:var(--orange);border-radius:50%;margin-right:7px;animation:blink 1.4s steps(1) infinite}@keyframes blink{50%{opacity:.25}}.topline .right{margin-left:auto}
+    .hero{min-height:calc(100vh - 34px);position:relative;padding:clamp(24px,4vw,62px);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;border-bottom:1px solid var(--line)}
+    .hero:before{content:'PLAY';position:absolute;right:-.02em;bottom:-.19em;font:clamp(180px,34vw,520px)/.8 var(--display);color:transparent;-webkit-text-stroke:1px rgba(232,228,216,.09);transform:skewY(-5deg);pointer-events:none}
+    .hero-nav{display:flex;align-items:center;gap:12px;position:relative;z-index:2}.logo{font:34px/1 var(--display);text-decoration:none;letter-spacing:-.04em}.logo span{color:var(--green)}.nav-links{margin-left:auto;display:flex;gap:7px}.nav-links a,.contact-pill{border:1px solid var(--line);padding:10px 13px;text-decoration:none;font-size:10px;text-transform:uppercase;letter-spacing:.08em;transition:.2s}.nav-links a:hover,.contact-pill:hover{background:var(--paper);color:var(--ink)}
+    .hero-copy{align-self:center;position:relative;z-index:2;max-width:1240px;margin-top:5vh}.eyebrow{font-size:11px;letter-spacing:.17em;color:var(--green);margin:0 0 18px}.hero h1{font:clamp(68px,14.8vw,230px)/.72 var(--display);letter-spacing:-.055em;margin:0;text-transform:uppercase;max-width:1080px}.hero h1 .ghost{display:block;color:transparent;-webkit-text-stroke:clamp(1px,.15vw,2px) var(--paper);transform:translateX(clamp(18px,7vw,110px));text-shadow:5px 0 0 rgba(25,255,105,.22),-4px 0 0 rgba(255,78,31,.22)}
+    .hero-foot{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto;align-items:end;gap:30px}.intro{max-width:540px;font-size:clamp(12px,1.2vw,15px);line-height:1.75;margin:0}.intro strong{color:var(--green);font-weight:500}.timecode{font-size:clamp(21px,3vw,42px);font-weight:500;letter-spacing:-.08em}.timecode small{display:block;font-size:9px;letter-spacing:.12em;text-align:right;color:#89877e}
+    .ticker{height:48px;background:var(--green);color:var(--ink);overflow:hidden;display:flex;align-items:center;border-bottom:1px solid var(--ink)}.ticker-track{display:flex;width:max-content;animation:marquee 24s linear infinite}.ticker span{font:22px/1 var(--display);white-space:nowrap;padding-right:30px}.ticker b{color:var(--orange);margin:0 11px}@keyframes marquee{to{transform:translateX(-50%)}}
+    .section{padding:clamp(72px,10vw,150px) clamp(20px,5vw,72px);position:relative;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:80px 1fr auto;gap:22px;align-items:end;margin-bottom:clamp(40px,6vw,80px)}.section-no{color:var(--green);font-size:11px}.section h2{font:clamp(50px,9vw,132px)/.78 var(--display);text-transform:uppercase;letter-spacing:-.05em;margin:0}.section-note{font-size:10px;text-align:right;color:#8c8a82;line-height:1.6}
+    .profile-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,.6fr);gap:clamp(35px,8vw,120px);align-items:start}.statement{font-size:clamp(23px,3.5vw,52px);line-height:1.13;letter-spacing:-.04em;margin:0}.statement em{font-family:var(--display);font-style:normal;color:var(--green)}.details{border-top:1px solid var(--line)}.detail{padding:17px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:11px}.detail span:first-child{color:#7d7b74}.detail span:last-child{text-align:right}
+    .works{background:var(--paper);color:var(--ink)}.works .section-head{border-color:rgba(10,10,8,.25)}.works .section-no{color:#008f39}.works .section-note{color:#55534c}.gallery{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(10px,1.8vw,25px);align-items:start}.work{margin:0;position:relative;cursor:pointer}.work:nth-child(1){grid-column:1/7}.work:nth-child(2){grid-column:7/13;margin-top:11vw}.work:nth-child(3){grid-column:2/6;margin-top:-2vw}.work:nth-child(4){grid-column:7/11;margin-top:2vw}.work:nth-child(5){grid-column:1/8;margin-top:4vw}.work:nth-child(6){grid-column:8/13;margin-top:9vw}.frame{background:#111;overflow:hidden;position:relative}.frame:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(10,10,8,.2);pointer-events:none}.work img{width:100%;display:block;filter:saturate(.82) contrast(1.08);transition:filter .35s,transform .6s cubic-bezier(.2,.7,.2,1)}.work:hover img{filter:saturate(1.15) contrast(1.04);transform:scale(1.025)}.caption{display:grid;grid-template-columns:34px 1fr auto;gap:8px;padding-top:10px;font-size:10px;text-transform:uppercase;letter-spacing:.05em}.caption b{font-weight:600}.caption span:last-child{color:#706e66}
+    .reel-list{display:grid;gap:16px}.reel-card{display:grid;grid-template-columns:80px 1fr auto;align-items:center;text-decoration:none;border-top:1px solid var(--line);padding:24px 0;transition:.25s}.reel-card:last-child{border-bottom:1px solid var(--line)}.reel-card:hover{padding-left:18px;color:var(--green)}.reel-index{font-size:11px;color:#77756e}.reel-title{font:clamp(30px,5vw,72px)/.9 var(--display);text-transform:uppercase;letter-spacing:-.04em}.play{width:54px;height:54px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:18px}.reel-card:hover .play{background:var(--green);color:var(--ink);border-color:var(--green)}
+    .contact{min-height:70vh;display:grid;place-items:center;text-align:center;overflow:hidden}.contact-inner{position:relative;z-index:2}.contact .kicker{font-size:11px;letter-spacing:.16em;color:var(--green)}.contact h2{font:clamp(64px,15vw,220px)/.74 var(--display);margin:18px 0 35px;letter-spacing:-.055em}.contact-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}.contact-actions a{padding:14px 20px;border:1px solid var(--line);text-decoration:none;font-size:11px}.contact-actions a:first-child{background:var(--green);border-color:var(--green);color:var(--ink)}.contact-actions a:hover{transform:translateY(-3px)}
+    footer{display:flex;justify-content:space-between;gap:20px;padding:22px;font-size:9px;color:#77756e;text-transform:uppercase;letter-spacing:.1em}
+    .lightbox{position:fixed;inset:0;z-index:100;background:rgba(5,5,4,.96);display:none;place-items:center;padding:clamp(15px,4vw,55px)}.lightbox.open{display:grid}.lightbox img{max-height:86vh;max-width:92vw;object-fit:contain}.close{position:absolute;top:20px;right:22px;color:var(--paper);background:none;border:1px solid var(--line);padding:10px 13px;cursor:pointer}.lb-count{position:absolute;bottom:18px;left:22px;font-size:10px;color:#8c8a82}
+    @media(max-width:760px){.topline .hide-mobile,.nav-links a:not(.contact-pill){display:none}.hero{min-height:88vh;padding:22px 18px 28px}.hero-copy{margin-top:4vh}.hero h1{font-size:clamp(64px,23vw,112px)}.hero h1 .ghost{transform:translateX(0)}.hero-foot{grid-template-columns:1fr}.timecode{display:none}.section{padding:75px 18px}.section-head{grid-template-columns:40px 1fr}.section-note{display:none}.profile-grid{grid-template-columns:1fr}.gallery{display:grid;grid-template-columns:1fr;gap:42px}.work:nth-child(n){grid-column:auto;margin-top:0}.caption{grid-template-columns:28px 1fr}.caption span:last-child{display:none}.reel-card{grid-template-columns:35px 1fr auto;padding:18px 0}.play{width:38px;height:38px}.contact{min-height:60vh}footer{flex-direction:column}.noise{opacity:.035}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.ticker-track,.tracking,.rec:before{animation:none!important}.work img,.reel-card{transition:none!important}}
   </style>
 </head>
 <body>
-
-  <canvas id="ascii-canvas"></canvas>
-  <div class="vhs-overlay"></div>
-
-  <div class="container">
-    <header>
-      <div class="meta-data">
-        <span>REC ●</span> <span>SYS.FISIX.OS</span> <span>[NTSC]</span>
-      </div>
-
-      <h1 id="siteName">FISIX!</h1>
-      <p>// <span id="siteRole">VIDEO EDITOR / DESIGNER</span> </p>
-
-      <!-- =========================================================
-           EDITAR AQUI (SEM COMPLICAÇÃO)
-           - A caixa não aparece pro público.
-           - Pra ver: abra com ?edit=1 ou #edit
-           ========================================================= -->
-      <div class="quick-edit">
-        <div class="quick-edit-title fisix-font">CONFIG.RÁPIDA</div>
-        <div class="quick-edit-body">
-          <div><b>Seu nome:</b> <span id="qe-name">FISIX!</span></div>
-          <div><b>Seu cargo:</b> <span id="qe-role">VIDEO EDITOR / DESIGNER</span></div>
-
-          <div style="margin-top:10px;"><b>Imagens da galeria (arquivos, separados por vírgula):</b></div>
-          <div class="qe-mono" id="qe-designs">1.png,
-2.png,
-3.png,
-4.png,
-5.png,
-6.png</div>
-
-          <div style="margin-top:10px;"><b>Vídeos (links /preview do Google Drive, separados por linha):</b></div>
-          <div class="qe-mono" id="qe-videos">Vídeo 1 | https://drive.google.com/file/d/1dwsZIHtCY2Bv8C0ld1zFckKPRKvy0C-H/preview
-Vídeo 2 | https://drive.google.com/file/d/1Cp-6tjxP6dKIQdHy-cdNg0uefth66dyX/preview
-Vídeo 3 | https://drive.google.com/file/d/11eufmarB1TyKO0o82gNVolp-SRhae62_/preview</div>
-        </div>
-      </div>
-
-      <nav class="nav-bar">
-        <button class="nav-btn active" onclick="openTab(event,'perfil')">PERFIL</button>
-        <button class="nav-btn" onclick="openTab(event,'designs')">DESIGNS</button>
-        <button class="nav-btn" onclick="openTab(event,'videos')">VIDEOS</button>
-      </nav>
-    </header>
-
-    <div id="perfil" class="tab-content active">
-      <section>
-        <h2>// QUEM SOU EU</h2>
-        <p>Bem-vindo ao sistema. Sou o Fisix! Sou editor de vídeo e designer.</p>
-        <p>Neste portfólio você pode ver meus trabalhos mais recentes.</p>
-        <div style="clear: both;"></div>
-      </section>
-
-      <section>
-        <h2>// SKILLS</h2>
-        <ul style="list-style-type: square; padding-left: 20px; line-height: 1.8;">
-          <li>Design Gráfico (Krita / Paint.NET)</li>
-          <li>Edição de Vídeo (Premiere / CapCut / Alight Motion)</li>
-          <li>Estética Retro/Analog</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>// CONTATO</h2>
-        <p>Me chama aqui: <b>@fisixyt_</b> • Email: <b>fisixxd@gmail.com</b></p>
-      </section>
-    </div>
-
-    <div id="designs" class="tab-content">
-      <h2>// ARQUIVO DE IMAGENS</h2>
-      <p style="margin-bottom: 20px;">Galeria de artes visuais.</p>
-
-      <div class="design-grid" id="designGrid">
-
-        <!-- Placeholders (ATUALIZADOS) - o script abaixo vai substituir por 1.png..6.png -->
-        <div class="design-item"><img src="1.png" alt="Design 1"></div>
-        <div class="design-item"><img src="2.png" alt="Design 2"></div>
-        <div class="design-item"><img src="3.png" alt="Design 3"></div>
-        <div class="design-item"><img src="4.png" alt="Design 4"></div>
-
-      </div>
-    </div>
-
-    <div id="videos" class="tab-content">
-      <h2>// VIDEOS</h2>
-
-      <div id="videoList">
-        <!-- Os vídeos são carregados automaticamente pelo script (veja a caixa CONFIG.RÁPIDA acima). -->
-      </div>
-    </div>
-
-    <footer>
-      <p>FISIX! © 2025</p>
-      <p>ALL RIGHTS RESERVED.</p>
-    </footer>
-  </div>
-
+  <div class="noise"></div><div class="scanlines"></div><div class="tracking"></div>
+  <div class="topline"><span class="rec">REC</span><span>FISIX_TAPE_01</span><span class="hide-mobile">SP // 00:00:00</span><span class="right">NTSC 29.97 FPS</span></div>
+  <main>
+    <section class="hero" id="home">
+      <nav class="hero-nav"><a class="logo" href="#home">FISIX<span>!</span></a><div class="nav-links"><a href="#sobre">Sobre</a><a href="#trampos">Trampos</a><a href="#edits">Edits</a><a class="contact-pill" href="#contato">Contato ↗</a></div></nav>
+      <div class="hero-copy"><p class="eyebrow">[ VIDEO EDITOR + DESIGNER ]</p><h1>Imagem<span class="ghost">com ruído.</span></h1></div>
+      <div class="hero-foot"><p class="intro">Eu sou o Fisix. Faço edição e design com <strong>textura, impacto e ritmo</strong> — peças que parecem encontradas numa fita esquecida, não saídas de um template.</p><div class="timecode" id="timecode">00:00:00:00<small>MASTER TIMECODE</small></div></div>
+    </section>
+    <div class="ticker"><div class="ticker-track"><span>VIDEO EDITING <b>✦</b> GRAPHIC DESIGN <b>✦</b> ANALOG TEXTURE <b>✦</b> MOTION <b>✦</b> VIDEO EDITING <b>✦</b> GRAPHIC DESIGN <b>✦</b> ANALOG TEXTURE <b>✦</b> MOTION <b>✦</b></span><span aria-hidden="true">VIDEO EDITING <b>✦</b> GRAPHIC DESIGN <b>✦</b> ANALOG TEXTURE <b>✦</b> MOTION <b>✦</b> VIDEO EDITING <b>✦</b> GRAPHIC DESIGN <b>✦</b> ANALOG TEXTURE <b>✦</b> MOTION <b>✦</b></span></div></div>
+    <section class="section" id="sobre"><div class="section-head"><span class="section-no">[01]</span><h2>Sem preset.</h2><span class="section-note">SIGNAL FOUND<br>TRACKING OK</span></div><div class="profile-grid"><p class="statement">Minha linguagem mistura design comercial com sujeira analógica. O objetivo é simples: criar algo que <em>gruda no olho</em> antes que o dedo role a tela.</p><div class="details"><div class="detail"><span>BASE</span><span>Brasil</span></div><div class="detail"><span>FAÇO</span><span>Vídeo / Design</span></div><div class="detail"><span>TOOLS</span><span>Premiere / Krita<br>CapCut / Alight Motion</span></div><div class="detail"><span>FREQUÊNCIA</span><span>24—60 FPS</span></div><div class="detail"><span>STATUS</span><span style="color:var(--green)">● Disponível</span></div></div></div></section>
+    <section class="section works" id="trampos"><div class="section-head"><span class="section-no">[02]</span><h2>Frames<br>selecionados.</h2><span class="section-note">ARCHIVE / 2025<br>6 FILES LOADED</span></div><div class="gallery">
+      <figure class="work" tabindex="0" data-index="0"><div class="frame"><img src="1.png" alt="Campanha Qualquer Key para CSG BR" loading="lazy"></div><figcaption class="caption"><span>01</span><b>Qualquer Key</b><span>Social / Campaign</span></figcaption></figure>
+      <figure class="work" tabindex="0" data-index="1"><div class="frame"><img src="2.png" alt="Identidade visual CSG TV" loading="lazy"></div><figcaption class="caption"><span>02</span><b>CSG TV</b><span>Brand / Web</span></figcaption></figure>
+      <figure class="work" tabindex="0" data-index="2"><div class="frame"><img src="3.png" alt="Campanha Drop CSG BR" loading="lazy"></div><figcaption class="caption"><span>03</span><b>Drop</b><span>Social / Promo</span></figcaption></figure>
+      <figure class="work" tabindex="0" data-index="3"><div class="frame"><img src="4.png" alt="Arte Mega Saldão" loading="lazy"></div><figcaption class="caption"><span>04</span><b>Mega Saldão</b><span>Social / Sale</span></figcaption></figure>
+      <figure class="work" tabindex="0" data-index="4"><div class="frame"><img src="5.png" alt="Campanha Adobe Premiere" loading="lazy"></div><figcaption class="caption"><span>05</span><b>Adobe Premiere</b><span>Promo / Design</span></figcaption></figure>
+      <figure class="work" tabindex="0" data-index="5"><div class="frame"><img src="6.png" alt="Campanha Promo Garanta Já" loading="lazy"></div><figcaption class="caption"><span>06</span><b>Promo Games</b><span>Social / Retail</span></figcaption></figure>
+    </div></section>
+    <section class="section" id="edits"><div class="section-head"><span class="section-no">[03]</span><h2>Motion<br>archive.</h2><span class="section-note">3 TAPES<br>STEREO</span></div><div class="reel-list">
+      <a class="reel-card" href="https://drive.google.com/file/d/1dwsZIHtCY2Bv8C0ld1zFckKPRKvy0C-H/preview" target="_blank" rel="noreferrer"><span class="reel-index">A/01</span><span class="reel-title">Edit tape one</span><span class="play">▶</span></a>
+      <a class="reel-card" href="https://drive.google.com/file/d/1Cp-6tjxP6dKIQdHy-cdNg0uefth66dyX/preview" target="_blank" rel="noreferrer"><span class="reel-index">A/02</span><span class="reel-title">Edit tape two</span><span class="play">▶</span></a>
+      <a class="reel-card" href="https://drive.google.com/file/d/11eufmarB1TyKO0o82gNVolp-SRhae62_/preview" target="_blank" rel="noreferrer"><span class="reel-index">A/03</span><span class="reel-title">Edit tape three</span><span class="play">▶</span></a>
+    </div></section>
+    <section class="section contact" id="contato"><div class="contact-inner"><span class="kicker">[ TEM UM PROJETO? ]</span><h2>DÁ O REC.</h2><div class="contact-actions"><a href="mailto:fisixxd@gmail.com">fisixxd@gmail.com ↗</a><a href="https://instagram.com/fisixyt_" target="_blank" rel="noreferrer">@fisixyt_ ↗</a></div></div></section>
+  </main>
+  <footer><span>FISIX! © <span id="year"></span></span><span>VIDEO EDITOR / DESIGNER</span><span>END OF TAPE ■</span></footer>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualização do trabalho"><button class="close" type="button">FECHAR [ESC]</button><img src="" alt=""><span class="lb-count"></span></div>
   <script>
-    // SCRIPT DE TROCA DE ABAS
-    function openTab(evt, tabName) {
-      // 1. Esconde todo o conteúdo
-      var contents = document.getElementsByClassName("tab-content");
-      for (var i = 0; i < contents.length; i++) {
-        contents[i].classList.remove("active");
-      }
-
-      // 2. Tira o destaque de todos os botões
-      var buttons = document.getElementsByClassName("nav-btn");
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove("active");
-      }
-
-      // 3. Mostra o conteúdo escolhido e destaca o botão clicado
-      document.getElementById(tabName).classList.add("active");
-
-      var clickedBtn = evt.currentTarget;
-      clickedBtn.classList.add("active");
-    }
-
-    // SCRIPT DO FUNDO ASCII
-    const canvas = document.getElementById('ascii-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-
-    function resize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    let angle = 0;
-    function project(x, y, z, centerX, centerY) {
-      const scale = 400 / (400 + z);
-      return { x: centerX + x * scale, y: centerY + y * scale, scale: scale };
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "#111";
-      ctx.font = "12px monospace";
-      angle += 0.01;
-
-      const leftX = width * 0.1;
-      const centerY = height / 2;
-      const rightX = width * 0.9;
-
-      if(width > 800) {
-        // CUBO ESQUERDA
-        const size = 120; const step = 30;
-        for (let x = -size; x <= size; x += step) {
-          for (let y = -size; y <= size; y += step) {
-            for (let z = -size; z <= size; z += step) {
-              let x1 = x * Math.cos(angle) - z * Math.sin(angle);
-              let z1 = x * Math.sin(angle) + z * Math.cos(angle);
-              let y1 = y * Math.cos(angle * 0.5) - z1 * Math.sin(angle * 0.5);
-              let z2 = y * Math.sin(angle * 0.5) + z1 * Math.cos(angle * 0.5);
-              if (Math.abs(x) >= size || Math.abs(y) >= size || Math.abs(z) >= size) {
-                const p = project(x1, y1, z2, leftX, centerY);
-                ctx.globalAlpha = 0.3;
-                ctx.fillText("+", p.x, p.y);
-              }
-            }
-          }
-        }
-        // LOSANGO DIREITA
-        const size2 = 140;
-        const points = [{x:0, y:size2, z:0}, {x:0, y:-size2, z:0}, {x:size2, y:0, z:0}, {x:-size2, y:0, z:0}, {x:0, y:0, z:size2}, {x:0, y:0, z:-size2}];
-        for(let i=0; i< points.length; i++) {
-          let pt = points[i];
-          let x1 = pt.x * Math.cos(-angle) - pt.z * Math.sin(-angle);
-          let z1 = pt.x * Math.sin(-angle) + pt.z * Math.cos(-angle);
-          let y1 = pt.y * Math.cos(-angle) - z1 * Math.sin(-angle);
-          let z2 = pt.y * Math.sin(-angle) + z1 * Math.cos(-angle);
-          const p = project(x1, y1, z2, rightX, centerY);
-          ctx.font = "20px Arial"; ctx.globalAlpha = 0.6; ctx.fillText("♦", p.x, p.y);
-        }
-      }
-
-      requestAnimationFrame(draw);
-    }
-    draw();
-
-    // Mostrar a CONFIG.RÁPIDA só quando você quiser:
-    // - Abra o site com ?edit=1  (ex: index.html?edit=1)
-    // - Ou com #edit (ex: index.html#edit)
-    (function maybeShowEditBox(){
-      const qs = new URLSearchParams(window.location.search);
-      if (window.location.hash === '#edit' || qs.get('edit') === '1') {
-        document.body.classList.add('show-edit');
-      }
-    })();
-
-    // ===== CONFIG RÁPIDA -> CONTEÚDO AUTOMÁTICO =====
-    (function applyQuickConfig(){
-      const name = document.getElementById('qe-name')?.textContent?.trim();
-      const role = document.getElementById('qe-role')?.textContent?.trim();
-      const designs = document.getElementById('qe-designs')?.textContent?.trim();
-      const videos = document.getElementById('qe-videos')?.textContent?.trim();
-
-      if(name) document.getElementById('siteName').textContent = name;
-      if(role) document.getElementById('siteRole').textContent = role;
-
-      // Galeria
-      const grid = document.getElementById('designGrid');
-      if(grid && designs){
-        grid.innerHTML = '';
-        designs.split(',').map(s => s.trim()).filter(Boolean).forEach((src, idx) => {
-          const item = document.createElement('div');
-          item.className = 'design-item';
-          item.innerHTML = `<img src="${src}" alt="Design ${idx+1}" loading="lazy">`;
-          grid.appendChild(item);
-        });
-      }
-
-      // Vídeos (uma linha por vídeo: TITULO | URL)
-      const list = document.getElementById('videoList');
-      if(list && videos){
-        list.innerHTML = '';
-        videos.split('\n').map(s => s.trim()).filter(Boolean).forEach((line, idx) => {
-          const parts = line.split('|');
-          const title = (parts[0] || `EDIT ${String(idx+1).padStart(2,'0')}`).trim();
-          const url = (parts[1] || '').trim();
-
-          const wrap = document.createElement('div');
-          wrap.className = 'video-container';
-          wrap.innerHTML = `
-            <div class="video-title">${title}</div>
-            <div class="video-wrapper">
-              <iframe src="${url}" allow="autoplay" loading="lazy"></iframe>
-            </div>
-          `;
-          list.appendChild(wrap);
-        });
-      }
-    })();
+    const pad=n=>String(n).padStart(2,'0');const start=performance.now();const tc=document.querySelector('#timecode');function tick(now){const t=(now-start)/1000,h=Math.floor(t/3600),m=Math.floor(t/60)%60,s=Math.floor(t)%60,f=Math.floor(t%1*30);tc.textContent=`${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;requestAnimationFrame(tick)}requestAnimationFrame(tick);
+    document.querySelector('#year').textContent=new Date().getFullYear();
+    const works=[...document.querySelectorAll('.work')],lb=document.querySelector('#lightbox'),lbImg=lb.querySelector('img'),count=lb.querySelector('.lb-count');function openWork(i){const img=works[i].querySelector('img');lbImg.src=img.src;lbImg.alt=img.alt;count.textContent=`FILE ${pad(i+1)} / ${pad(works.length)}`;lb.classList.add('open');document.body.style.overflow='hidden';lb.querySelector('button').focus()}function closeWork(){lb.classList.remove('open');document.body.style.overflow=''}works.forEach((w,i)=>{w.addEventListener('click',()=>openWork(i));w.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openWork(i)}})});lb.querySelector('button').addEventListener('click',closeWork);lb.addEventListener('click',e=>{if(e.target===lb)closeWork()});addEventListener('keydown',e=>{if(e.key==='Escape')closeWork()});
   </script>
 </body>
 </html>
